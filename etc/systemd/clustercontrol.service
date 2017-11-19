@@ -1,0 +1,16 @@
+# Copyright 2017 Severalnines AB
+# ClusterControl Service
+
+[Unit]
+Description=ClusterControl Service
+After=syslog.target
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/clustercontrol
+PIDFile=/var/run/clustercontrol.pid
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

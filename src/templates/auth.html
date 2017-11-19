@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html ng-app="cc.auth">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        const version = {{ .version }};
+    </script>
+    <link rel="stylesheet" href="/css/vendors.css">
+</head>
+
+<body>
+    <main ui-view></main>
+    <script defer src="/js/vendors.js"></script>
+    <script defer src="/js/auth.templates.js"></script>
+    <script defer src="/js/auth.js"></script>
+</body>
+
+</html>

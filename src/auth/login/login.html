@@ -1,0 +1,14 @@
+<section class="auth">
+    <form ng-submit="vm.onSubmit()">
+    <div>
+        <input type="text" ng-model="vm.user.login" ng-disabled="vm.loading">
+    </div>
+    <div>
+        <input type="password" ng-model="vm.user.password" ng-disabled="vm.loading">
+    </div>
+    <div ng-if="vm.error">{{vm.error}}</div>
+    <div>
+        <button type="submit" ng-disabled="vm.loading">Login</button>
+    </div>
+    </form>
+</section>

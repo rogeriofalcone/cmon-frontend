@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app="cc.main" class="has-navbar-fixed-top">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        const version = {{ .version }};
+        const serverTime = ((t) => {
+            setInterval(() => t++, 1E3);
+            return () => t * 1;
+        })({{.timestamp}});
+    </script>
+    <link rel="stylesheet" href="/css/vendors.css">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+    <cc-nav></cc-nav>
+    <main class="main" ui-view></main>
+    <script defer src="/js/vendors.js"></script>
+    <script defer src="/js/websocket.js"></script>
+    <script defer src="/js/main.templates.js"></script>
+    <script defer src="/js/main.js"></script>
+</body>
+
+</html>

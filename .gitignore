@@ -1,0 +1,10 @@
+# IDE
+.idea
+
+# Frontend
+node_modules
+dist
+
+# Backend
+clustercontrol
+build

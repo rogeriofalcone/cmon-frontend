@@ -1,0 +1,97 @@
+<section class="dashboard">
+    <div class="columns">
+        <div class="clusters column is-three-fifths" ng-if="vm.clusters.length > 0">
+            <div class="cluster" ng-repeat="cluster in vm.clusters">
+                <div class="name">
+                    <span class="icon is-small">
+                        <img ng-src="/assets/vendors/{{cluster.vendor}}.svg">
+                    </span>
+                    <a ui-sref="cluster({clusterId: cluster.cluster_id})">{{cluster.cluster_name}}</a>
+                </div>
+                <div class="info columns">
+                    <div class="column is-narrow">
+                        <div class="auto-recovery is-size-7">
+                            <div>
+                                <span class="icon is-small">
+                                    <span class="fa {{cluster.cluster_auto_recovery ? 'fa-toggle-on has-text-success' : 'fa-toggle-off has-text-danger'}}"></span>
+                                </span>
+                                Cluster Auto Recovery
+                            </div>
+                            <div>
+                                <span class="icon is-small">
+                                    <span class="fa {{cluster.node_auto_recovery ? 'fa-toggle-on has-text-success' : 'fa-toggle-off has-text-danger'}}"></span>
+                                </span>
+                                Node Auto Recovery
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-narrow">
+                        <div class="auto-recovery is-size-7">
+                            <div>
+                                Vendor: {{cluster.vendor | lowercase}}
+                            </div>
+                            <div>
+                                Version: {{cluster.version}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field is-grouped is-grouped-multiline">
+                            <div class="control" ng-repeat="host in cluster.hosts" ng-if="!host.isController()">
+                                <cc-host-tag host="host"></cc-host-tag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="cluster card" ng-repeat="cluster in vm.clusters">
+                    <header class="card-header">
+                            <p class="card-header-title">
+                                    <span class="tag is-dark">{{cluster.cluster_type | lowercase}}</span>
+                                    <a ui-sref="cluster({clusterId: cluster.cluster_id})">{{cluster.cluster_name}}</a>
+                            </p>
+                        </header>
+                <div>
+                    <h2 class="subtitle">
+                        <span class="tag is-dark">{{cluster.cluster_type | lowercase}}</span>
+                        <a ui-sref="cluster({clusterId: cluster.cluster_id})">{{cluster.cluster_name}}</a>
+                    </h2>
+                    <div class="field is-grouped is-grouped-multiline">
+                        <div class="control" ng-repeat="host in cluster.hosts" ng-if="!host.isController()">
+                            <a class="tags has-addons">
+                                <span class="tag icon is-dark">
+                                    <span class="fa fa-server"></span>
+                                </span>
+                                <span class="tag is-primary">
+                                    {{host.hostname}}
+                                </span>
+                                <span class="tag is-dark">
+                                    {{host.nodetype}}
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Alarms</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <div class="notification is-size-7" ng-repeat="alarm in vm.alarms | orderBy: '-created' | limitTo:10" ng-class="{
+                            'is-warning': alarm.severity_name == 'ALARM_WARNING',
+                            'is-danger': alarm.severity_name == 'ALARM_CRITICAL',
+                        }">
+                            <strong><span class="tag">{{alarm.getSeverityText() | uppercase}}</span> {{alarm.title}}</strong>
+                            <div>Reported: {{alarm.reported}}</div>
+                            <div>ID: {{alarm.alarm_id}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,23 @@
+.dashboard {
+    .clusters {
+        .cluster {
+            padding: 1.25rem;
+            box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+            margin-bottom: 1.25rem;
+            .name {
+                .icon {
+                    margin-right: 0.25rem;
+                }
+                a {
+                    text-decoration: none;
+                    vertical-align: text-bottom;
+                }
+            }
+            .info {
+                padding-top: 0.25rem;
+                margin-top: 0.75rem;
+                border-top: 1px solid rgba(10, 10, 10, 0.1);
+            }
+        }
+    }
+}
