@@ -10,11 +10,12 @@
                 clusterId: '@',
                 hostId: '@?',
                 name: '@?',
-                chartType:'@',
-                statType: '@',
+                chartType:'@?',
+                statType: '@?',
                 fields: '@?',
                 startDate: '@',
                 endDate: '@?',
+                query: '@',
             },
             templateUrl: 'main/chart/chart.html',
             controller: 'ChartController as vm',
@@ -55,13 +56,17 @@
                 let series = [];
 
                 // Create data series from backend data
+                vm.fields = Object.keys(data).join(',');
                 vm.fields
                     .split(',')
                     .forEach((field) => {
-                        data[field].sort(sortMethod);
+                        // data[field].sort(sortMethod);
+
                         series.push({
                             name: field,
-                            data: data[field],
+                            data: data[field].map((val) => {
+                                return [val[0], parseInt(val[1])]
+                            }),
                         });
                     });
 
@@ -105,7 +110,7 @@
                     vm.chart.series.forEach((serie) => {
                         if (serie.name == k) {
                             points.sort(sortMethod);
-                            points.forEach((point) => serie.addPoint(point))
+                            points.map((point) => [point[0],parseInt(point[1])]).forEach((point) => serie.addPoint(point))
                         }
                     });
                 });
@@ -133,16 +138,17 @@
             let params = {
                 cid: vm.clusterId,
                 type: vm.statType,
-                from: vm.startDate,
+                start: vm.startDate,
+                query: vm.query,
             };
-            if (vm.hostId) {
-                params.hid = vm.hostId;
-            }
-            if (vm.fields) {
-                params.fields = vm.fields;
-            }
+            // if (vm.hostId) {
+            //     params.hid = vm.hostId;
+            // }
+            // if (vm.fields) {
+            //     params.fields = vm.fields;
+            // }
             if (vm.endDate && vm.endDate !== '') {
-                params.to = vm.endDate;
+                params.end = vm.endDate;
             }
             return url + Object.keys(params)
                 .map((key) => `${key}=${encodeURIComponent(params[key])}`)

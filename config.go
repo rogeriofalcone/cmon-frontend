@@ -17,6 +17,7 @@ func loadConfig() error {
 type Config struct {
 	HTTP ConfigHTTP `ini:"http"`
 	RPC  ConfigRPC  `ini:"rpc"`
+	Prometheus ConfigPrometheus `ini:"prometheus"`
 }
 
 // ConfigHTTP contains http configurations
@@ -56,4 +57,20 @@ func (c *ConfigRPC) Path(p string) (*url.URL, error) {
 	}
 	url.Path = path.Join("v2", p)
 	return url, nil
+}
+
+// ConfigPrometheus 
+type ConfigPrometheus struct {
+	Host string `ini:"host"`
+	Port string `ini:"port"`
+}
+
+// GetAddr returns http address to send RPC request to Prometheus
+func (c *ConfigPrometheus) GetAddr() string {
+	return fmt.Sprintf("http://%s:%s/prometheus/api/v1/query_range", c.Host, c.Port)
+}
+
+// Path returns a parsed URL for http request to Prometheus
+func (c *ConfigPrometheus) Path() (*url.URL, error) {
+	return url.Parse(c.GetAddr())
 }

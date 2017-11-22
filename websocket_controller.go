@@ -73,33 +73,58 @@ func statWebsocketHandler(c websocket.Connection) {
 	}
 
 	// Get cluster ID
-	clusterID, err := c.Context().URLParamInt("cid")
+	//clusterID, err := c.Context().URLParamInt("cid")
+	//if err != nil {
+	//	c.Emit("error", err.Error())
+	//	return
+	//}
+	//
+	//// Get cluster ID
+	//hostID, err := c.Context().URLParamInt("hid")
+	//if err != nil {
+	//	c.Emit("error", err.Error())
+	//	return
+	//}
+
+	start, err := c.Context().URLParamFloat64("start")
 	if err != nil {
-		c.Emit("error", err.Error())
+		c.Emit("error", "failed to parse start param")
+		return
+	}
+	end, err := c.Context().URLParamFloat64("end")
+	if err != nil {
+		c.Emit("error", "failed to parse end param")
 		return
 	}
 
-	// Get cluster ID
-	hostID, err := c.Context().URLParamInt("hid")
-	if err != nil {
-		c.Emit("error", err.Error())
-		return
+	request := &PrometheusStatsRequest{
+		Query: c.Context().URLParam("query"),
+		Start: start,
+		End:   end,
+		Step:  3,
 	}
 
-	// Generate request body
-	request := &StatRequest{
-		Operation:  "statByName",
-		ClusterID:  clusterID,
-		HostID:     hostID,
-		Compact:    true,
-		StatType:   c.Context().URLParam("type"),
-		StatFields: c.Context().URLParam("fields") + ",created,sampleends",
-		StatStart:  c.Context().URLParam("from"),
-		StatEnd:    c.Context().URLParam("to"),
+	now := float64(time.Now().Unix())
+	if request.End == 0 {
+		request.End = now
 	}
+
+	fmt.Println(*request)
+
+	//// Generate request body
+	//request := &StatRequest{
+	//	Operation:  "statByName",
+	//	ClusterID:  clusterID,
+	//	HostID:     hostID,
+	//	Compact:    true,
+	//	StatType:   c.Context().URLParam("type"),
+	//	StatFields: c.Context().URLParam("fields") + ",created,sampleends",
+	//	StatStart:  c.Context().URLParam("from"),
+	//	StatEnd:    c.Context().URLParam("to"),
+	//}
 
 	// Fetch initial data
-	initialData, _, err := getStatByName(s.GetString(SessionKeyCmonSid), request)
+	initialData, _, err := getStatByName2(request)
 	if err != nil {
 		c.Emit("error", err.Error())
 		return
@@ -107,7 +132,7 @@ func statWebsocketHandler(c websocket.Connection) {
 	c.Emit("init", initialData)
 
 	// Keep fetching data if the end time is not specified
-	if request.StatEnd == "" {
+	if request.End == now {
 		ticker := time.NewTicker(time.Second * 3)
 		// Stop the ticker when the socket closes
 		c.OnDisconnect(func() {
@@ -118,16 +143,60 @@ func statWebsocketHandler(c websocket.Connection) {
 			fmt.Println("error")
 			ticker.Stop()
 		})
-		go func(c websocket.Connection, key string, req *StatRequest) {
+		go func(c websocket.Connection, key string, req *PrometheusStatsRequest) {
 			for range ticker.C {
 				fmt.Println("more")
-				data, l, _ := getStatByName(key, req)
+				data, l, _ := getStatByName2(req)
 				if l > 0 {
 					c.Emit("point", data)
 				}
 			}
 		}(c, s.GetString(SessionKeyCmonSid), request)
 	}
+}
+
+func getStatByName2(r *PrometheusStatsRequest) (interface{}, int, error) {
+	res, err := prometheusRequest(*r)
+	if err != nil {
+		return nil, 0, err
+	}
+	// Decode JSON to this struct
+	data := &struct {
+		Data struct {
+			Result []map[string]interface{} `json:"result"`
+		} `json:"data"`
+	}{}
+
+	//d,_ := ioutil.ReadAll(res.Body)
+	//fmt.Println(string(d))
+
+	// Decode JSON
+	err = json.NewDecoder(res.Body).Decode(data)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	fmt.Println("data", data)
+
+	l := len(data.Data.Result)
+	if l > 0 {
+		// Create an export object
+		export := map[string][]interface{}{}
+
+		for _, res := range data.Data.Result {
+			metric := res["metric"].(map[string]interface{})
+			export[metric["__name__"].(string)] = res["values"].([]interface{})
+		}
+
+		fmt.Println("export", export)
+		r.Start = r.End + 1
+
+		return export, l, nil
+	}
+
+	r.End = float64(time.Now().Unix())
+
+	return data.Data.Result, l, nil
 }
 
 func getStatByName(key string, r *StatRequest) (interface{}, int, error) {
@@ -190,6 +259,13 @@ type StatRequest struct {
 	StatStart  string `json:"start_datetime,omitempty"`
 	StatEnd    string `json:"end_datetime,omitempty"`
 	lastSample int
+}
+
+type PrometheusStatsRequest struct {
+	Query string
+	Start float64
+	End   float64
+	Step  int
 }
 
 // Socket contains User and basic clusters/hosts info

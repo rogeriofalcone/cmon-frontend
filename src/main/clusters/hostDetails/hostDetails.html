@@ -1,23 +1,101 @@
 <section class="host-details">
     <div class="columns">
         <div class="column">
-            <cc-chart name="CPU" cluster-id="{{vm.clusterId}}" host-id="{{vm.hostId}}" stat-type="cpustat" chart-type="area" fields="idle,user,sys,iowait,irq,steal"
-                start-date="{{vm.statMemStartTime}}"></cc-chart>
+            <!--<cc-chart name="CPU"-->
+            <!--cluster-id="{{vm.clusterId}}"-->
+            <!--host-id="{{vm.hostId}}"-->
+            <!--stat-type="cpustat"-->
+            <!--chart-type="area"-->
+            <!--fields="idle,user,sys,iowait,irq,steal"-->
+            <!--start-date="{{vm.statMemStartTime}}"></cc-chart>-->
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_memory_MemFree"></cc-chart>
         </div>
         <div class="column">
-            <cc-chart name="Memory usage" cluster-id="{{vm.clusterId}}" host-id="{{vm.hostId}}" stat-type="netstat" fields="txBytes,rxBytes"
-                start-date="{{vm.statMemStartTime}}"></cc-chart>
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_memory_MemAvailable"></cc-chart>
         </div>
     </div>
     <div class="columns">
         <div class="column">
-
-            <cc-chart name="Disk usage" cluster-id="{{vm.clusterId}}" host-id="{{vm.hostId}}" stat-type="diskstat" fields="free,total"
-                start-date="{{vm.statMemStartTime}}"></cc-chart>
+            <!--<cc-chart name="CPU"-->
+            <!--cluster-id="{{vm.clusterId}}"-->
+            <!--host-id="{{vm.hostId}}"-->
+            <!--stat-type="cpustat"-->
+            <!--chart-type="area"-->
+            <!--fields="idle,user,sys,iowait,irq,steal"-->
+            <!--start-date="{{vm.statMemStartTime}}"></cc-chart>-->
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_load1"></cc-chart>
         </div>
         <div class="column">
-            <cc-chart name="Memory usage" cluster-id="{{vm.clusterId}}" host-id="{{vm.hostId}}" stat-type="memorystat" fields="ramtotal,ramcached,ramfree"
-                start-date="{{vm.statMemStartTime}}"></cc-chart>
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_load5"></cc-chart>
         </div>
     </div>
+    <div class="columns">
+        <div class="column">
+            <!--<cc-chart name="CPU"-->
+            <!--cluster-id="{{vm.clusterId}}"-->
+            <!--host-id="{{vm.hostId}}"-->
+            <!--stat-type="cpustat"-->
+            <!--chart-type="area"-->
+            <!--fields="idle,user,sys,iowait,irq,steal"-->
+            <!--start-date="{{vm.statMemStartTime}}"></cc-chart>-->
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_load15"></cc-chart>
+        </div>
+        <div class="column">
+            <cc-chart name="Memory usage"
+                      cluster-id="{{vm.clusterId}}"
+                      host-id="{{vm.hostId}}"
+                      stat-type="netstat"
+                      fields="txBytes,rxBytes"
+                      start-date="{{vm.statMemStartTime}}"
+                      query="node_filesystem_free"></cc-chart>
+        </div>
+    </div>
+    <!--<div class="column">-->
+
+    <!--<cc-chart name="Disk usage"-->
+    <!--cluster-id="{{vm.clusterId}}"-->
+    <!--host-id="{{vm.hostId}}"-->
+    <!--stat-type="diskstat"-->
+    <!--fields="free,total"-->
+    <!--start-date="{{vm.statMemStartTime}}"></cc-chart>-->
+    <!--</div>-->
+    <!--<div class="column">-->
+    <!--<cc-chart name="Memory usage"-->
+    <!--cluster-id="{{vm.clusterId}}"-->
+    <!--host-id="{{vm.hostId}}"-->
+    <!--stat-type="memorystat"-->
+    <!--fields="ramtotal,ramcached,ramfree"-->
+    <!--start-date="{{vm.statMemStartTime}}"></cc-chart>-->
+    <!--</div>-->
+    <!--</div>-->
 </section>

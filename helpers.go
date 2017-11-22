@@ -10,6 +10,8 @@ import (
 	"os/exec"
 
 	"github.com/kataras/iris/sessions"
+	"strconv"
+	"time"
 )
 
 // Checks if there is an authorization flag set in the session
@@ -102,6 +104,45 @@ func rpcRequest(p string, key string, data interface{}) (*http.Response, error) 
 		Name:  RPCKeyCmonSessionID,
 		Value: key,
 	})
+	// Execute the request
+	return client.Do(req)
+}
+
+// Make a request to RPC
+func prometheusRequest(data PrometheusStatsRequest) (*http.Response, error) {
+	// Create HTTP client
+	client := &http.Client{
+		Transport: &http.Transport{
+			// Skip SSL certificate validation
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+	// Generate a url to make a request to RPC
+	url, err := config.Prometheus.Path()
+	if err != nil {
+		return nil, err
+	}
+
+q := url.Query()
+	q.Set("query", data.Query)
+	q.Set("start", strconv.FormatFloat(data.Start, 'f', 6, 64))
+	q.Set("step", strconv.Itoa(data.Step))
+	q.Set("_", strconv.Itoa(int(time.Now().Unix())))
+
+	if data.End > 0 {
+		q.Set("end", strconv.FormatFloat(data.End, 'f', 6, 64))
+	}
+	url.RawQuery = q.Encode()
+
+	fmt.Println(url.String())
+
+	// Generate request
+	req, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 	// Execute the request
 	return client.Do(req)
 }
