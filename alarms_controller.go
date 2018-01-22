@@ -4,19 +4,16 @@ import (
 	"encoding/json"
 
 	"github.com/kataras/iris/context"
-	"github.com/kataras/iris/mvc"
 	"github.com/kataras/iris/sessions"
 )
 
 type AlarmsController struct {
-	mvc.C
 	Manager *sessions.Sessions
 	Session *sessions.Session
 }
 
 // BeginRequest runs before each request
 func (a *AlarmsController) BeginRequest(ctx context.Context) {
-	a.C.BeginRequest(ctx)
 	if a.Manager == nil {
 		ctx.Application().Logger().Errorf(`AuthController: sessions manager is nil, you should bind it`)
 		ctx.StopExecution()

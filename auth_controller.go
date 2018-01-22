@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/kataras/iris/context"
-	"github.com/kataras/iris/mvc"
 	"github.com/kataras/iris/sessions"
 )
 
@@ -19,7 +18,6 @@ func init() {
 
 // AuthController is controlling the authentication process
 type AuthController struct {
-	mvc.C
 	Manager *sessions.Sessions
 	Session *sessions.Session
 	Context context.Context
@@ -27,7 +25,6 @@ type AuthController struct {
 
 // BeginRequest runs before each request
 func (c *AuthController) BeginRequest(ctx context.Context) {
-	c.C.BeginRequest(ctx)
 	c.Context = ctx
 	if c.Manager == nil {
 		ctx.Application().Logger().Errorf(`AuthController: sessions manager is nil, you should bind it`)

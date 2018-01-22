@@ -10,7 +10,6 @@ import (
 
 // IndexController controlls the root path
 type IndexController struct {
-	mvc.C
 	Manager *sessions.Sessions
 	Session *sessions.Session
 	Context context.Context
@@ -18,7 +17,6 @@ type IndexController struct {
 
 // BeginRequest runs before each request
 func (i *IndexController) BeginRequest(ctx context.Context) {
-	i.C.BeginRequest(ctx)
 	i.Context = ctx
 	if i.Manager == nil {
 		ctx.Application().Logger().Errorf(`AuthController: sessions manager is nil, you should bind it`)

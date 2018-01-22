@@ -2,14 +2,12 @@ package main
 
 import (
 	"github.com/kataras/iris/context"
-	"github.com/kataras/iris/mvc"
 )
 
 type CmonController struct {
-	mvc.C
 }
 
-func (c *CmonController) PostEvent() {
+func (c *CmonController) PostEvent(ctx context.Context) {
 	// Don't do anything if there are no sockets connected
 	if len(sockets) == 0 {
 		return
@@ -21,7 +19,7 @@ func (c *CmonController) PostEvent() {
 
 	// Read request JSON into a map
 	e := &context.Map{}
-	err := c.Ctx.ReadJSON(e)
+	err := ctx.ReadJSON(e)
 	if err != nil {
 		app.Logger().Warn(err)
 		return
