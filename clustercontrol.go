@@ -20,6 +20,7 @@ import (
 
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/context"
+	"github.com/kataras/iris/mvc"
 	"github.com/kataras/iris/sessions"
 	"github.com/kataras/iris/sessions/sessiondb/boltdb"
 	"github.com/kataras/iris/websocket"
@@ -159,14 +160,29 @@ func main() {
 	})
 
 	// Controllers
-	app.Controller("/json/auth", new(AuthController), sess)
-	app.Controller("/json/alarms", new(AlarmsController), sess)
-	app.Controller("/cmon", new(CmonController))
+	authMVC := mvc.New(app.Party("/json/auth"))
+	authMVC.Handle(new(AuthController))
+	authMVC.Register(sess)
+	// app.Controller("/json/auth", new(AuthController), sess)
+	// app.Controller("/json/alarms", new(AlarmsController), sess)
+	alarmsMVC := mvc.New(app.Party("/json/alarms"))
+	alarmsMVC.Handle(new(AlarmsController))
+	alarmsMVC.Register(sess)
+	// app.Controller("/cmon", new(CmonController))
+	cmonMVC := mvc.New(app.Party("/cmon"))
+	cmonMVC.Handle(new(CmonController))
+	cmonMVC.Register(sess)
 
 	// Hadle all other request
 	// Required for using angular in html5mode
-	app.Controller("/", new(IndexController), sess)
-	app.Controller("{root:path}", new(IndexController), sess)
+	appMVC := mvc.New(app.Party("/"))
+	appMVC.Handle(new(IndexController))
+	appMVC.Register(sess)
+	// app.Controller("/", new(IndexController), sess)
+	// app.Controller("{root:path}", new(IndexController), sess)
+	app2MVC := mvc.New(app.Party("{root:path}"))
+	app2MVC.Handle(new(IndexController))
+	app2MVC.Register(sess)
 
 	// Start the application
 	app.Run(
