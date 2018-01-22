@@ -161,28 +161,26 @@ func main() {
 
 	// Controllers
 	authMVC := mvc.New(app.Party("/json/auth"))
-	authMVC.Handle(new(AuthController))
 	authMVC.Register(sess)
-	// app.Controller("/json/auth", new(AuthController), sess)
-	// app.Controller("/json/alarms", new(AlarmsController), sess)
+	authMVC.Handle(new(AuthController))
+
 	alarmsMVC := mvc.New(app.Party("/json/alarms"))
-	alarmsMVC.Handle(new(AlarmsController))
 	alarmsMVC.Register(sess)
-	// app.Controller("/cmon", new(CmonController))
+	alarmsMVC.Handle(new(AlarmsController))
+
 	cmonMVC := mvc.New(app.Party("/cmon"))
-	cmonMVC.Handle(new(CmonController))
 	cmonMVC.Register(sess)
+	cmonMVC.Handle(new(CmonController))
 
 	// Hadle all other request
 	// Required for using angular in html5mode
 	appMVC := mvc.New(app.Party("/"))
-	appMVC.Handle(new(IndexController))
 	appMVC.Register(sess)
-	// app.Controller("/", new(IndexController), sess)
-	// app.Controller("{root:path}", new(IndexController), sess)
+	appMVC.Handle(new(IndexController))
+
 	app2MVC := mvc.New(app.Party("{root:path}"))
-	app2MVC.Handle(new(IndexController))
 	app2MVC.Register(sess)
+	app2MVC.Handle(new(IndexController))
 
 	// Start the application
 	app.Run(

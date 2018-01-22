@@ -35,6 +35,7 @@ func (c *AuthController) BeginRequest(ctx context.Context) {
 	// set the `c.Session` we will use that in our Get method.
 	c.Session = c.Manager.Start(ctx)
 }
+func (c *AuthController) EndRequest(ctx context.Context) {}
 
 // PostLogin handles POST requests to /login
 func (c *AuthController) PostLogin() interface{} {

@@ -2,7 +2,7 @@
 # host = 127.0.0.1
 port = 8080
 # root = /usr/share/clustercontrol
-root = /home/simon/projects/go/src/github.com/skamenetskiy/clustercontrol/dist
+root = /home/simon/go/src/github.com/skamenetskiy/clustercontrol/dist
 
 [rpc]
 host = 127.0.0.1

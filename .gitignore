@@ -1,6 +1,9 @@
 # IDE
 .idea
 
+# npm
+package-lock.json
+
 # Frontend
 node_modules
 dist

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/kataras/iris/context"
 	"github.com/kataras/iris/sessions"
@@ -19,8 +20,10 @@ func (a *AlarmsController) BeginRequest(ctx context.Context) {
 		ctx.StopExecution()
 		return
 	}
+	fmt.Println("HELLO")
 	a.Session = a.Manager.Start(ctx)
 }
+func (a *AlarmsController) EndRequest(ctx context.Context) {}
 
 func (a *AlarmsController) GetAll() interface{} {
 	if !isAuthorized(a.Session) {

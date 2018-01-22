@@ -27,6 +27,7 @@ func (i *IndexController) BeginRequest(ctx context.Context) {
 	// set the `c.Session` we will use that in our Get method.
 	i.Session = i.Manager.Start(ctx)
 }
+func (i *IndexController) EndRequest(ctx context.Context) {}
 
 // Any handles all requests
 func (i *IndexController) Any() mvc.View {
